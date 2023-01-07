@@ -1,0 +1,79 @@
+<!DOCTYPE CrossStudio_Project_File>
+<solution Name="WTCRC" target="8" version="2">
+  <project Name="WTCRC">
+    <configuration
+      LIBRARY_IO_TYPE="RTT"
+      Name="Common"
+      arm_architecture="v7M"
+      arm_compiler_variant="SEGGER"
+      arm_core_type="Cortex-M3"
+      arm_endian="Little"
+      arm_fpu_type=""
+      arm_linker_variant="SEGGER"
+      arm_target_device_name="STM32F103C8"
+      arm_target_interface_type="SWD"
+      c_preprocessor_definitions="USE_HAL_DRIVER;STM32F103xB"
+      c_user_include_directories="../Tuner;../Inc;../Drivers/STM32F1xx_HAL_Driver/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;../Drivers/CMSIS/Include"
+      debug_register_definition_file="$(ProjectDir)/STM32F103xx_Registers.xml"
+      debug_start_from_entry_point_symbol="No"
+      debug_target_connection="J-Link"
+      gcc_c_language_standard="c17"
+      gcc_cplusplus_language_standard="c++17"
+      gcc_debugging_level="Level 3"
+      gcc_optimization_level="Level 0"
+      link_linker_script_file="$(ProjectDir)/STM32F1xx_Flash.icf"
+      linker_memory_map_file="$(ProjectDir)/STM32F103C8_MemoryMap.xml"
+      linker_section_placements_segments="FLASH1 RX 0x08000000 0x00010000;RAM1 RWX 0x20000000 0x00005000;"
+      project_directory=""
+      project_type="Executable" />
+    <folder Name="Drivers">
+      <folder Name="CMSIS">
+        <file file_name="../Src/system_stm32f1xx.c" />
+      </folder>
+      <folder Name="STM32F1xx_HAL_Driver">
+        <file file_name="../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c" />
+        <file file_name="../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c" />
+        <file file_name="../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c" />
+        <file file_name="../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c" />
+        <file file_name="../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c" />
+        <file file_name="../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c" />
+        <file file_name="../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c" />
+        <file file_name="../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c" />
+        <file file_name="../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c" />
+        <file file_name="../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c" />
+        <file file_name="../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c" />
+        <file file_name="../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c" />
+        <file file_name="../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c" />
+        <file file_name="../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c" />
+        <file file_name="../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c" />
+      </folder>
+    </folder>
+    <folder Name="Startup">
+      <file file_name="$(StudioDir)/samples/SEGGER_THUMB_Startup.s" />
+      <file file_name="STM32F103xx_Vectors.s" />
+      <file file_name="STM32F1xx_Startup.s" />
+    </folder>
+    <folder Name="Tuner">
+      <file file_name="../Tuner/Tuner_Drv_Lithio.cpp" />
+      <file file_name="../Tuner/Tuner_Drv_Lithio.h" />
+      <file file_name="../Tuner/Tuner_Interface.cpp" />
+      <file file_name="../Tuner/Tuner_Interface.h" />
+      <file file_name="../Tuner/Tuner_Patch_Lithio_V102_p224.h" />
+      <file file_name="../Tuner/Tuner_Patch_Lithio_V205_p512.h" />
+      <file file_name="../Tuner/eeprom.cpp" />
+      <file file_name="../Tuner/eeprom.h" />
+      <file file_name="../Tuner/global.h" />
+      <file file_name="../Tuner/nv_memory.cpp" />
+      <file file_name="../Tuner/nv_memory.h" />
+      <file file_name="../Tuner/tuner.cpp" />
+      <file file_name="../Tuner/tuner.h" />
+      <file file_name="../Tuner/ui.cpp" />
+      <file file_name="../Tuner/ui.h" />
+    </folder>
+    <folder Name="User">
+      <file file_name="../Src/main.c" />
+      <file file_name="../Src/stm32f1xx_hal_msp.c" />
+      <file file_name="../Src/stm32f1xx_it.c" />
+    </folder>
+  </project>
+</solution>
