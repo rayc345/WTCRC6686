@@ -1,6 +1,7 @@
 #include "Tuner_Interface.h"
 #include "Tuner_Patch_Lithio_V102_p224.h"
 #include "Tuner_Patch_Lithio_V205_p512.h"
+#include "main.h"
 
 extern I2C_HandleTypeDef hi2c1;
 
@@ -88,15 +89,6 @@ bool Tuner_Patch_Load(const uint8_t *pLutBytes, uint16_t size) {
   return r;
 }
 
-bool Tuner_Table_Write(const uint8_t *tab) {
-  if (tab[1] == 0xFF) {
-    HAL_Delay(tab[2]);
-    return true;
-  } else {
-    return Tuner_WriteBuffer((uint8_t *)&tab[1], tab[0]);
-  }
-}
-
 bool Tuner_Patch(const uint8_t TEF) {
   uint8_t uData[24];
   uData[0] = 0x1E;
@@ -143,6 +135,15 @@ bool Tuner_Patch(const uint8_t TEF) {
   if (!Tuner_WriteBuffer(uData, 3))
     return false;
   return true;
+}
+
+bool Tuner_Table_Write(const uint8_t *tab) {
+  if (tab[1] == 0xFF) {
+    HAL_Delay(tab[2]);
+    return true;
+  } else {
+    return Tuner_WriteBuffer((uint8_t *)&tab[1], tab[0]);
+  }
 }
 
 bool Tuner_Init(void) {

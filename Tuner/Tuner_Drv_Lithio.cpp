@@ -52,6 +52,10 @@ bool devTEF_FM_Set_ChannelEqualizer(uint16_t eq) {
   return devTEF_Set_Cmd(TEF_FM, Cmd_Set_ChannelEqualizer, {eq});
 }
 
+bool devTEF_FM_Set_NoiseBlanker(uint8_t mode, uint16_t start) {
+  return devTEF_Set_Cmd(TEF_FM, Cmd_Set_NoiseBlanker, {mode, start});
+}
+
 bool devTEF_FM_Set_DigitalRadio(uint16_t dr) {
   return devTEF_Set_Cmd(TEF_FM, Cmd_Set_DigitalRadio, {dr});
 }
@@ -65,7 +69,7 @@ bool devTEF_FM_Set_StereoImprovement(uint16_t fmsi) {
 }
 
 bool devTEF_FM_Set_LevelOffset(int16_t offset) {
-  return devTEF_Set_Cmd(TEF_FM, Cmd_Set_LevelOffset, {offset - 70});
+  return devTEF_Set_Cmd(TEF_FM, Cmd_Set_LevelOffset, {offset * 10});
 }
 
 bool devTEF_FM_Set_Highcut_Level(uint16_t mode, uint16_t start, uint16_t slope) {
@@ -96,16 +100,48 @@ bool devTEF_FM_Set_Stereo_Mph(uint16_t mode, uint16_t start, uint16_t slope) {
   return devTEF_Set_Cmd(TEF_FM, Cmd_Set_Stereo_Mph, {mode, start, slope});
 }
 
-bool devTEF_FM_Set_Stereo_Min(uint16_t mode) {
-  return devTEF_Set_Cmd(TEF_FM, Cmd_Set_Stereo_Min, {mode});
+bool devTEF_FM_Set_Stereo_Min(uint16_t mode, uint16_t limit) {
+  return devTEF_Set_Cmd(TEF_FM, Cmd_Set_Stereo_Min, {mode, limit});
+}
+
+bool devTEF_FM_Set_StHiBlend_Level(uint8_t mode, uint16_t start, uint16_t slope) {
+  return devTEF_Set_Cmd(TEF_FM, Cmd_Set_StHiBlend_Level, {mode, start, slope});
+}
+
+bool devTEF_FM_Set_StHiBlend_Noise(uint8_t mode, uint16_t start, uint16_t slope) {
+  return devTEF_Set_Cmd(TEF_FM, Cmd_Set_StHiBlend_Noise, {mode, start, slope});
+}
+
+bool devTEF_FM_Set_StHiBlend_Mph(uint8_t mode, uint16_t start, uint16_t slope) {
+  return devTEF_Set_Cmd(TEF_FM, Cmd_Set_StHiBlend_Mph, {mode, start, slope});
+}
+
+bool devTEF_FM_Set_StHiBlend_Max(uint8_t mode, uint16_t limit) {
+  return devTEF_Set_Cmd(TEF_FM, Cmd_Set_StHiBlend_Max, {mode, limit});
 }
 
 bool devTEF_FM_Set_RDS(void) {
-  return devTEF_Set_Cmd(TEF_FM, Cmd_Set_RDS, {1, 1, 0});
+  return devTEF_Set_Cmd(TEF_FM, Cmd_Set_RDS, {1, 2, 0});
 }
 
 bool devTEF_FM_Set_DR_Options(uint16_t samplerate, uint16_t mode, uint16_t format) {
   return devTEF_Set_Cmd(TEF_FM, Cmd_Set_DR_Options, {samplerate, mode, format});
+}
+
+bool devTEF_FM_Specials(uint16_t audio) {
+  return devTEF_Set_Cmd(TEF_FM, Cmd_Set_Specials, {audio});
+}
+
+bool devTEF_FM_Set_StereoBandBlend_Time(uint16_t attack, uint16_t decay) {
+  return devTEF_Set_Cmd(TEF_FM, Cmd_Set_StBandBlend_Time, {attack, decay});
+}
+
+bool devTEF_FM_Set_StereoBandBlend_Gain(uint16_t band1, uint16_t band2, uint16_t band3, uint16_t band4) {
+  return devTEF_Set_Cmd(TEF_FM, Cmd_Set_StBandBlend_Gain, {band1, band2, band3, band4});
+}
+
+bool devTEF_FM_Set_StereoBandBlend_Bias(int16_t band1, int16_t band2, int16_t band3, int16_t band4) {
+  return devTEF_Set_Cmd(TEF_FM, Cmd_Set_StBandBlend_Bias, {band1, band2, band3, band4});
 }
 
 bool devTEF_AM_Tune_To(uint16_t frequency) {
@@ -114,6 +150,18 @@ bool devTEF_AM_Tune_To(uint16_t frequency) {
 
 bool devTEF_AM_Set_Bandwidth(uint16_t bandwidth) {
   return devTEF_Set_Cmd(TEF_AM, Cmd_Set_Bandwidth, {0, bandwidth});
+}
+
+bool devTEF_AM_Set_Antenna(uint16_t attenuation) {
+  return devTEF_Set_Cmd(TEF_AM, Cmd_Set_Antenna, {attenuation});
+}
+
+bool devTEF_AM_Set_CoChannelDet(uint16_t sensitivity) {
+  return devTEF_Set_Cmd(TEF_AM, Cmd_Set_CoChannelDet, {1, 2, sensitivity, 3});
+}
+
+bool devTEF_AM_Set_NoiseBlanker(uint8_t mode, uint16_t sensitivity) {
+  return devTEF_Set_Cmd(TEF_AM, Cmd_Set_NoiseBlanker, {mode, sensitivity});
 }
 
 bool devTEF_AM_Set_DigitalRadio(uint16_t dr) {
@@ -138,7 +186,7 @@ bool devTEF_APPL_Set_OperationMode(uint16_t mode) {
 
 bool devTEF_FM_Get_Quality_Status(int16_t *level, uint16_t *usn, uint16_t *wam, int16_t *offset, uint16_t *bandwidth, uint16_t *mod) {
   uint8_t buf[14];
-  uint16_t r = devTEF_Get_Cmd(TEF_FM, Cmd_Get_Quality_Status, buf, sizeof(buf));
+  uint16_t r = devTEF_Get_Cmd(TEF_FM, Cmd_Get_Quality_Data, buf, sizeof(buf));
 
   if (level) {
     *level = Convert8bto16b(buf + 2) / 10;
@@ -205,6 +253,38 @@ bool devTEF_FM_Get_Signal_Status(uint16_t *status) {
 
   if (status) {
     *status = Convert8bto16b(buf);
+  }
+  return r;
+}
+
+bool devTEF_FM_Get_Processing_Status(uint16_t *softmute, uint16_t *highcut, uint16_t *stereo, uint16_t *sthiblend, uint8_t *stband_1, uint8_t *stband_2, uint8_t *stband_3, uint8_t *stband_4) {
+  uint8_t buf[12];
+  uint16_t r = devTEF_Get_Cmd(TEF_FM, Cmd_Get_Processing_Status, buf, sizeof(buf));
+  if (softmute) {
+    *softmute = Convert8bto16b(buf) / 10;
+  }
+  if (highcut) {
+    *highcut = Convert8bto16b(buf + 2) / 10;
+  }
+  if (stereo) {
+    *stereo = Convert8bto16b(buf + 4) / 10;
+  }
+  if (sthiblend) {
+    *sthiblend = Convert8bto16b(buf + 6) / 10;
+  }
+  uint16_t stband_1_2 = Convert8bto16b(buf + 8);
+  uint16_t stband_3_4 = Convert8bto16b(buf + 10);
+  if (stband_1) {
+    *stband_1 = High_16bto8b(stband_1_2);
+  }
+  if (stband_2) {
+    *stband_2 = Low_16bto8b(stband_1_2);
+  }
+  if (stband_3) {
+    *stband_3 = High_16bto8b(stband_3_4);
+  }
+  if (stband_4) {
+    *stband_4 = Low_16bto8b(stband_3_4);
   }
   return r;
 }
