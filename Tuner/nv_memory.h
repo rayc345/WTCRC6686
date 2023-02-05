@@ -8,7 +8,7 @@
 
 #define NVMSIG0 0x5C
 #define NVMSIG1 0x4C
-#define NVMSIG ((uint16_t)(NVMSIG0 << 8) + ((uint16_t)NVMSIG1))
+#define NVMSIG ((uint16_t)(NVMSIG0) + ((uint16_t)NVMSIG1 << 8))
 
 // NV memory addr
 enum NV_Mem {

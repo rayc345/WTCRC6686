@@ -33,7 +33,12 @@ void SetVolume(uint8_t v30) {
 
   if (v30 == vLast)
     return;
-  devTEF_Audio_Set_Volume((int16_t)M_Volume[v30]);
+  devTEF_Audio_Set_Volume(M_Volume[v30]);
+
+  if (v30 == 0)
+    devTEF_Audio_Set_Mute(1);
+  else
+    devTEF_Audio_Set_Mute(0);
 
   vLast = v30;
 }
@@ -159,8 +164,8 @@ void SetDigiRadio(void) {
   devTEF_FM_Set_DigitalRadio(nDIGRA);
   devTEF_AM_Set_DigitalRadio(nDIGRA);
   if (nDIGRA) {
-    devTEF_FM_Set_DR_Options(0, 34 << 8 | 2, 4112);
-    devTEF_AM_Set_DR_Options(0, 34 << 8 | 2, 4112);
+    devTEF_FM_Set_DR_Options(6500, 34 << 8 | 2, 16);
+    devTEF_AM_Set_DR_Options(6500, 34 << 8 | 2, 16);
   }
 }
 
@@ -290,6 +295,8 @@ void GetRFStatReg(void) {
     bSTIN = (signalsts >> 15) & 1;
 
     devTEF_FM_Get_Quality_Status(&level, nullptr, nullptr, nullptr, nullptr, nullptr);
+  } else {
+    devTEF_AM_Get_Quality_Status(&level, nullptr, nullptr, nullptr, nullptr, nullptr);
   }
   nRSSI = level;
 }
@@ -462,7 +469,7 @@ void mainTuner(void) {
     };
   }
   Tuner_Patch(205);
-  Tuner_Init9216();
+  Tuner_Init12000();
   Tuner_Init();
   NVMGetArgs();
   LCDClr();
@@ -473,8 +480,9 @@ void mainTuner(void) {
   if (nTuneType == TYPE_CH)
     SeekCh(0); // Tune to current ch
   else
-    TuneFreqDisp();   // Tune to default frequency and display
-  SetRFCtrlReg();     // Set RF mode related regs
+    TuneFreqDisp(); // Tune to default frequency and display
+  SetRFCtrlReg();   // Set RF mode related regs
+  SetDigiRadio();
   SetVolume(nVolume); // Set audio volume
   HAL_Delay(50);
 

@@ -20,7 +20,7 @@
       gcc_c_language_standard="c17"
       gcc_cplusplus_language_standard="c++17"
       gcc_debugging_level="Level 3"
-      gcc_optimization_level="Level 1"
+      gcc_optimization_level="Level 0"
       link_linker_script_file="$(ProjectDir)/STM32F1xx_Flash.icf"
       linker_memory_map_file="$(ProjectDir)/STM32F103C8_MemoryMap.xml"
       linker_section_placements_segments="FLASH1 RX 0x08000000 0x00010000;RAM1 RWX 0x20000000 0x00005000;"

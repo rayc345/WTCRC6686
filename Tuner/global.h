@@ -98,8 +98,8 @@ inline constexpr uint16_t M_FMFilter[] =
     {0, 56, 64, 72, 84, 97, 114, 133, 151, 168, 184, 200, 217, 236, 254, 287, 311};
 inline constexpr uint8_t M_AMFilter[] =
     {3, 4, 6, 8};
-inline constexpr int8_t M_Volume[] =
-    {-60, -56, -52, -48, -46, -44, -42, -40, -38, -36, -34, -32, -30, -28, -26, -24, -22, -20, -18, -16, -14, -12, -10, -8, -6, -4, -2, 0, 2, 3};
+inline constexpr int16_t M_Volume[] =
+    {-300, -250, -200, -150, -120, -110 - 100, -90, -80, -70, -60, -55, -50, -45, -40, -35, -30, -25, -20, -15, -10, -8, -6, -5, -4, -3, -2, -1, 0, 5, 10};
 
 inline volatile int8_t nLRot;
 inline volatile int8_t nRRot;

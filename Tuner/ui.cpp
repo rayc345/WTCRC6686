@@ -33,7 +33,7 @@ const char MT_SQU2[] = "Search Threshold";
 const char MT_LSIG[] = "Low Signal Thre";  // Normal/reduced signal quality for seek/scan/any
 const char MT_FMCE[] = "FM ChannelEqu";    // FM channel equalizer
 const char MT_FMMP[] = "FM MultpathImprv"; // FM enhanced multipath suppression
-const char MT_DIRA[] = "Digital Radio";    // FM enhanced multipath suppression
+const char MT_DIRA[] = "Digital Radio";    // Digital Radio Option
 const char MT_DEEM[] = "Deemphasize";      // FM de-emphasis
 const char MT_BKLT[] = "BackLight";
 const char MT_TSCN[] = "Time Scan";
@@ -388,14 +388,14 @@ void LCDXYUIntLenZP(const uint8_t x, const uint8_t y, const uint32_t n, const ui
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
   if (GPIO_Pin == SH1A_Pin) {
     if (HAL_GPIO_ReadPin(SH1A_GPIO_Port, SH1A_Pin) == HAL_GPIO_ReadPin(SH1B_GPIO_Port, SH1B_Pin))
-      --nLRot;
-    else
       ++nLRot;
+    else
+      --nLRot;
   } else if (GPIO_Pin == SH2A_Pin) {
     if (HAL_GPIO_ReadPin(SH2A_GPIO_Port, SH2A_Pin) == HAL_GPIO_ReadPin(SH2B_GPIO_Port, SH2B_Pin))
-      --nRRot;
-    else
       ++nRRot;
+    else
+      --nRRot;
   }
 }
 
