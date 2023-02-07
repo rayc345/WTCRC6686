@@ -98,6 +98,7 @@ typedef enum {
 
 typedef enum {
   Cmd_Set_OperationMode = 1,
+  Cmd_Set_Keycode = 2,
   Cmd_Set_GPIO = 3,
   Cmd_Set_ReferenceClock = 4,
   Cmd_Activate = 5,
@@ -149,6 +150,10 @@ bool devTEF_Audio_Set_Volume(int16_t volume);
 bool devTEF_Audio_Set_Mute(uint16_t mode);
 
 bool devTEF_APPL_Set_OperationMode(uint16_t mode);
+bool devTEF_APPL_Set_Keycode(uint16_t key_high, uint16_t key_low);
+bool devTEF_APPL_Set_GPIO(uint16_t pin, uint16_t module, uint16_t feature);
+bool devTEF_APPL_Set_ReferenceClock(uint32_t frequency, uint16_t type);
+bool devTEF_APPL_Activate(uint16_t mode);
 
 bool devTEF_FM_Get_Quality_Status(int16_t *level, uint16_t *usn, uint16_t *wam, int16_t *offset, uint16_t *bandwidth, uint16_t *mod);
 bool devTEF_FM_Get_RDS_Data(uint16_t *status, uint16_t *A_block, uint16_t *B_block, uint16_t *C_block, uint16_t *D_block, uint16_t *dec_error);

@@ -1,5 +1,6 @@
 #include "Tuner_Drv_Lithio.h"
 #include "Tuner_Interface.h"
+#include <cstring>
 
 #define High_16bto8b(a) ((uint8_t)(((a) >> 8) & 0xFF))
 #define Low_16bto8b(a) ((uint8_t)(a))
@@ -22,14 +23,16 @@ bool devTEF_Set_Cmd(TEF_MODULE module, uint8_t cmd, std::initializer_list<int> p
 }
 
 bool devTEF_Get_Cmd(TEF_MODULE module, uint8_t cmd, uint8_t *receive, uint16_t len) {
-  uint8_t buf[3];
+  uint8_t buf[40];
 
   buf[0] = module;
   buf[1] = cmd;
-  buf[2] = 1;
+  buf[2] = 0;
 
   Tuner_WriteBuffer(buf, 3);
-  return Tuner_ReadBuffer(receive, len);
+  bool rl = Tuner_ReadBuffer(buf, len + 2);
+  memcpy(receive, buf + 2, len);
+  return rl;
 }
 
 bool devTEF_FM_Tune_To(uint16_t frequency) {
@@ -184,27 +187,43 @@ bool devTEF_APPL_Set_OperationMode(uint16_t mode) {
   return devTEF_Set_Cmd(TEF_APPL, Cmd_Set_OperationMode, {mode});
 }
 
+bool devTEF_APPL_Set_Keycode(uint16_t key_high, uint16_t key_low) {
+  return devTEF_Set_Cmd(TEF_APPL, Cmd_Set_Keycode, {key_high, key_low});
+}
+
+bool devTEF_APPL_Set_GPIO(uint16_t pin, uint16_t module, uint16_t feature) {
+  return devTEF_Set_Cmd(TEF_APPL, Cmd_Set_GPIO, {pin, module, feature});
+}
+
+bool devTEF_APPL_Set_ReferenceClock(uint32_t frequency, uint16_t type) {
+  return devTEF_Set_Cmd(TEF_APPL, Cmd_Set_ReferenceClock, {(uint16_t)(frequency >> 16), (uint16_t)(frequency & 0xFFFF), type});
+}
+
+bool devTEF_APPL_Activate(uint16_t mode) {
+  return devTEF_Set_Cmd(TEF_APPL, Cmd_Activate, {mode});
+}
+
 bool devTEF_FM_Get_Quality_Status(int16_t *level, uint16_t *usn, uint16_t *wam, int16_t *offset, uint16_t *bandwidth, uint16_t *mod) {
   uint8_t buf[14];
   uint16_t r = devTEF_Get_Cmd(TEF_FM, Cmd_Get_Quality_Data, buf, sizeof(buf));
 
   if (level) {
-    *level = Convert8bto16b(buf + 2) / 10;
+    *level = Convert8bto16b(buf + 2);
   }
   if (usn) {
-    *usn = Convert8bto16b(buf + 4) / 10;
+    *usn = Convert8bto16b(buf + 4);
   }
   if (wam) {
-    *wam = Convert8bto16b(buf + 6) / 10;
+    *wam = Convert8bto16b(buf + 6);
   }
   if (offset) {
-    *offset = Convert8bto16b(buf + 8) / 10;
+    *offset = Convert8bto16b(buf + 8);
   }
   if (bandwidth) {
-    *bandwidth = Convert8bto16b(buf + 10) / 10;
+    *bandwidth = Convert8bto16b(buf + 10);
   }
   if (mod) {
-    *mod = Convert8bto16b(buf + 12) / 10;
+    *mod = Convert8bto16b(buf + 12);
   }
   return r;
 }
@@ -239,10 +258,10 @@ bool devTEF_FM_Get_AGC(uint16_t *input_att, uint16_t *feedback_att) {
   uint8_t r = devTEF_Get_Cmd(TEF_FM, Cmd_Get_AGC, buf, sizeof(buf));
 
   if (input_att) {
-    *input_att = Convert8bto16b(buf) / 10;
+    *input_att = Convert8bto16b(buf);
   }
   if (feedback_att) {
-    *feedback_att = Convert8bto16b(buf + 2) / 10;
+    *feedback_att = Convert8bto16b(buf + 2);
   }
   return r;
 }
@@ -261,16 +280,16 @@ bool devTEF_FM_Get_Processing_Status(uint16_t *softmute, uint16_t *highcut, uint
   uint8_t buf[12];
   uint16_t r = devTEF_Get_Cmd(TEF_FM, Cmd_Get_Processing_Status, buf, sizeof(buf));
   if (softmute) {
-    *softmute = Convert8bto16b(buf) / 10;
+    *softmute = Convert8bto16b(buf);
   }
   if (highcut) {
-    *highcut = Convert8bto16b(buf + 2) / 10;
+    *highcut = Convert8bto16b(buf + 2);
   }
   if (stereo) {
-    *stereo = Convert8bto16b(buf + 4) / 10;
+    *stereo = Convert8bto16b(buf + 4);
   }
   if (sthiblend) {
-    *sthiblend = Convert8bto16b(buf + 6) / 10;
+    *sthiblend = Convert8bto16b(buf + 6);
   }
   uint16_t stband_1_2 = Convert8bto16b(buf + 8);
   uint16_t stband_3_4 = Convert8bto16b(buf + 10);
@@ -304,22 +323,22 @@ bool devTEF_AM_Get_Quality_Status(int16_t *level, uint16_t *noise, uint16_t *co_
   uint16_t r = devTEF_Get_Cmd(TEF_AM, Cmd_Get_Quality_Status, buf, sizeof(buf));
 
   if (level) {
-    *level = Convert8bto16b(buf + 2) / 10;
+    *level = Convert8bto16b(buf + 2);
   }
   if (noise) {
-    *noise = Convert8bto16b(buf + 4) / 10;
+    *noise = Convert8bto16b(buf + 4);
   }
   if (co_channel) {
     *co_channel = Convert8bto16b(buf + 6);
   }
   if (offset) {
-    *offset = Convert8bto16b(buf + 8) / 10;
+    *offset = Convert8bto16b(buf + 8);
   }
   if (bandwidth) {
-    *bandwidth = Convert8bto16b(buf + 10) / 10;
+    *bandwidth = Convert8bto16b(buf + 10);
   }
   if (mod) {
-    *mod = Convert8bto16b(buf + 12) / 10;
+    *mod = Convert8bto16b(buf + 12);
   }
   return r;
 }

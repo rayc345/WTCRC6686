@@ -36,27 +36,6 @@ static const uint8_t tuner_init_tab[] = {
     5, 0x21, 0x27, 0x01, 0xFF, 0x06                                       // AM_Set_LevelOffset(1,-250)
 };
 
-static const uint8_t tuner_init_tab4000[] = {
-    3, 0x14, 0x00, 0x01,
-    2, 0xFF, 50,
-    9, 0x40, 0x04, 0x01, 0x00, 0x3D, 0x09, 0x00, 0x00, 0x00, // APPL_Set_ReferenceClock(1,61,2304,0)  Set crystal reference 4MHz
-    5, 0x40, 0x05, 0x01, 0x00, 0x01,                         // APPL_Activate(1, 1)
-    2, 0xFF, 100};
-
-static const uint8_t tuner_init_tab9216[] = {
-    3, 0x14, 0x00, 0x01,
-    2, 0xFF, 50,
-    9, 0x40, 0x04, 0x01, 0x00, 0x8C, 0xA0, 0x00, 0x00, 0x00, // APPL_Set_ReferenceClock(1,140, 40960,0)  Set crystal reference 9.216MHz
-    5, 0x40, 0x05, 0x01, 0x00, 0x01,                         // APPL_Activate(1, 1)
-    2, 0xFF, 100};
-
-static const uint8_t tuner_init_tab12000[] = {
-    3, 0x14, 0x00, 0x01,
-    2, 0xFF, 50,
-    9, 0x40, 0x04, 0x01, 0x00, 0xB7, 0x1B, 0x00, 0x00, 0x00, // APPL_Set_ReferenceClock(1,183, 6912,0)  Set crystal reference 12MHz
-    5, 0x40, 0x05, 0x01, 0x00, 0x01,                         // APPL_Activate(1, 1)
-    2, 0xFF, 100};
-
 bool Tuner_WriteBuffer(uint8_t *buf, uint16_t len) {
   HAL_StatusTypeDef r = HAL_I2C_Master_Transmit(&hi2c1, 0xC8, buf, len, 100);
   return r == HAL_OK;
@@ -98,7 +77,7 @@ bool Tuner_Patch(const uint8_t TEF) {
   uData[4] = 0x5A;
   if (!Tuner_WriteBuffer(uData, 5))
     return false;
-  HAL_Delay(10);
+  HAL_Delay(15);
   uData[0] = 0x1C;
   uData[1] = 0x00;
   uData[2] = 0x00;
@@ -134,6 +113,12 @@ bool Tuner_Patch(const uint8_t TEF) {
   uData[2] = 0x00;
   if (!Tuner_WriteBuffer(uData, 3))
     return false;
+  uData[0] = 0x14;
+  uData[1] = 0x00;
+  uData[2] = 0x01;
+  if (!Tuner_WriteBuffer(uData, 3))
+    return false;
+  HAL_Delay(50);
   return true;
 }
 
@@ -151,39 +136,6 @@ bool Tuner_Init(void) {
   const uint8_t *p = tuner_init_tab;
 
   for (uint16_t i = 0; i < sizeof(tuner_init_tab); i += (p[i] + 1)) {
-    if (true != (r = Tuner_Table_Write(p + i)))
-      break;
-  }
-  return r;
-}
-
-bool Tuner_Init4000(void) {
-  bool r;
-  const uint8_t *p = tuner_init_tab4000;
-
-  for (uint16_t i = 0; i < sizeof(tuner_init_tab4000); i += (p[i] + 1)) {
-    if (true != (r = Tuner_Table_Write(p + i)))
-      break;
-  }
-  return r;
-}
-
-bool Tuner_Init9216(void) {
-  bool r;
-  const uint8_t *p = tuner_init_tab9216;
-
-  for (uint16_t i = 0; i < sizeof(tuner_init_tab9216); i += (p[i] + 1)) {
-    if (true != (r = Tuner_Table_Write(p + i)))
-      break;
-  }
-  return r;
-}
-
-bool Tuner_Init12000(void) {
-  bool r;
-  const uint8_t *p = tuner_init_tab12000;
-
-  for (uint16_t i = 0; i < sizeof(tuner_init_tab12000); i += (p[i] + 1)) {
     if (true != (r = Tuner_Table_Write(p + i)))
       break;
   }

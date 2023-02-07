@@ -298,7 +298,7 @@ void GetRFStatReg(void) {
   } else {
     devTEF_AM_Get_Quality_Status(&level, nullptr, nullptr, nullptr, nullptr, nullptr);
   }
-  nRSSI = level;
+  nRSSI = level / 10;
 }
 
 bool IsSigOK(void) {
@@ -468,8 +468,11 @@ void mainTuner(void) {
     while (1) {
     };
   }
+
   Tuner_Patch(205);
-  Tuner_Init12000();
+  devTEF_APPL_Set_ReferenceClock(12000000, 0);
+  devTEF_APPL_Activate(1);
+  HAL_Delay(100);
   Tuner_Init();
   NVMGetArgs();
   LCDClr();

@@ -875,24 +875,24 @@ void Menu_Stat_FM(void) {
 
     switch (nItem) {
     case 0:
-      LCDXYIntLen(13, 1, usn, 3); // FM ultrasonic noise detector & AM high frequency noise detector
+      LCDXYIntLen(13, 1, usn / 10, 3); // FM ultrasonic noise detector & AM high frequency noise detector
       break;
 
     case 1:
-      LCDXYIntLen(13, 1, wam, 3); // FM multipath
+      LCDXYIntLen(13, 1, wam / 10, 3); // FM multipath
       break;
 
     case 2:
-      LCDXYIntLen(11, 1, offset, 4); // Frequency offset
+      LCDXYIntLen(11, 1, offset / 10, 4); // Frequency offset
       break;
 
     case 3:
-      LCDXYIntLen(12, 1, bandwidth, 3); // IF filter bandwidth
+      LCDXYIntLen(12, 1, bandwidth / 10, 3); // IF filter bandwidth
       LCDXYChar(15, 1, 'K');
       break;
 
     case 4:
-      LCDXYIntLen(12, 1, mod, 3); // Modulation index
+      LCDXYIntLen(12, 1, mod / 10, 3); // Modulation index
       break;
     }
   }
@@ -944,7 +944,7 @@ void Menu_Stat_AM(void) {
     devTEF_AM_Get_Quality_Status(nullptr, &noise, &cochannel, &offset, &bandwidth, &mod);
     switch (nItem) {
     case 0:
-      LCDXYIntLen(13, 1, noise, 3); // AM high frequency noise detector
+      LCDXYIntLen(13, 1, noise / 10, 3); // AM high frequency noise detector
       break;
 
     case 1:
@@ -952,16 +952,16 @@ void Menu_Stat_AM(void) {
       break;
 
     case 2:
-      LCDXYIntLen(11, 1, offset, 4); // Frequency offset
+      LCDXYIntLen(11, 1, offset / 10, 4); // Frequency offset
       break;
 
     case 3:
-      LCDXYIntLen(12, 1, bandwidth, 3); // IF filter bandwidth
+      LCDXYIntLen(12, 1, bandwidth / 10, 3); // IF filter bandwidth
       LCDXYChar(15, 1, 'K');
       break;
 
     case 4:
-      LCDXYIntLen(12, 1, mod, 3); // Modulation index
+      LCDXYIntLen(12, 1, mod / 10, 3); // Modulation index
       break;
     }
   }
