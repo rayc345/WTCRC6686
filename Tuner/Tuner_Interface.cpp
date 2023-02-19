@@ -1,4 +1,5 @@
 #include "Tuner_Interface.h"
+#include "Tuner_Patch_Lithio_V101_p120.h"
 #include "Tuner_Patch_Lithio_V102_p224.h"
 #include "Tuner_Patch_Lithio_V205_p512.h"
 #include "main.h"
@@ -86,7 +87,10 @@ bool Tuner_Patch(const uint8_t TEF) {
   uData[2] = 0x74;
   if (!Tuner_WriteBuffer(uData, 3))
     return false;
-  if (TEF == 102) {
+  if (TEF == 101) {
+    if (!Tuner_Patch_Load(pPatchBytes101, PatchSize101))
+      return false;
+  } else if (TEF == 102) {
     if (!Tuner_Patch_Load(pPatchBytes102, PatchSize102))
       return false;
   } else if (TEF == 205) {

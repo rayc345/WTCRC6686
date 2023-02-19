@@ -103,6 +103,10 @@ bool devTEF_FM_Set_Stereo_Mph(uint16_t mode, uint16_t start, uint16_t slope) {
   return devTEF_Set_Cmd(TEF_FM, Cmd_Set_Stereo_Mph, {mode, start, slope});
 }
 
+bool devTEF_FM_Set_Stereo_Max(uint16_t mode) {
+  return devTEF_Set_Cmd(TEF_FM, Cmd_Set_Stereo_Mph, {mode});
+}
+
 bool devTEF_FM_Set_Stereo_Min(uint16_t mode, uint16_t limit) {
   return devTEF_Set_Cmd(TEF_FM, Cmd_Set_Stereo_Min, {mode, limit});
 }

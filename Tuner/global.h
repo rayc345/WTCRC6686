@@ -112,11 +112,12 @@ inline uint8_t nStepIdx;  // Step index for current band
 inline uint8_t nFMFilter; // Current FIR filter index for FM
 inline uint8_t nAMFilter; // Current FIR filter index for AM
 
-inline uint8_t nDeemphasis; // FM de-emphasis, 0=off, 1=50us, 2=75us
-inline uint8_t nDIGRA;      // FM/AM Digital radio, 0=off, 1=on
 inline uint8_t nLowerSig;   // Normal/reduced signal quality for seek/scan/any, 0=normal, 1=lower
-inline uint8_t nFMEMS;      // FM improved multipath suppression, 0=off, 1=on
 inline uint8_t nFMCEQ;      // FM channel equalizer, 0=off, 1=on
+inline uint8_t nFMEMS;      // FM improved multipath suppression, 0=off, 1=on
+inline uint8_t nFMSI;       // FM Stereo Improvement, 0=off, 1=on
+inline uint8_t nDIGRA;      // FM/AM Digital radio, 0=off, 1=on
+inline uint8_t nDeemphasis; // FM de-emphasis, 0=off, 1=50us, 2=75us
 
 inline int8_t nSquelch[2]; // Signal squelch value in dBuv, -20~99
                            // 1st item for auto mute, 2nd item for seek/scan/any

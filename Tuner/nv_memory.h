@@ -6,7 +6,7 @@
 #include "eeprom.h"
 #include "global.h"
 
-#define NVMSIG0 0x5C
+#define NVMSIG0 0x5D
 #define NVMSIG1 0x4C
 #define NVMSIG ((uint16_t)(NVMSIG0) + ((uint16_t)NVMSIG1 << 8))
 

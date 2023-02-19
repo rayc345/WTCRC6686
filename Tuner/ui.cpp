@@ -34,6 +34,7 @@ const char MT_LSIG[] = "Low Signal Thre";  // Normal/reduced signal quality for 
 const char MT_FMCE[] = "FM ChannelEqu";    // FM channel equalizer
 const char MT_FMMP[] = "FM MultpathImprv"; // FM enhanced multipath suppression
 const char MT_DIRA[] = "Digital Radio";    // Digital Radio Option
+const char MT_FMSI[] = "FM StereoImprov";  // FM Stereo Improvement
 const char MT_DEEM[] = "Deemphasize";      // FM de-emphasis
 const char MT_BKLT[] = "BackLight";
 const char MT_TSCN[] = "Time Scan";
@@ -47,6 +48,7 @@ struct M_ITEM M_Radio[] =
         {MID_LSIG, MT_LSIG},
         {MID_FMCE, MT_FMCE},
         {MID_FMMP, MT_FMMP},
+        {MID_FMSI, MT_FMSI},
         {MID_DIRA, MT_DIRA},
         {MID_DEEM, MT_DEEM}};
 
@@ -88,6 +90,15 @@ struct M_ITEM M_FMMP[] =
     {
         {MID_FMMPOFF, MT_FMMPOFF},
         {MID_FMMPON, MT_FMMPON}};
+
+// Menu Option->FMSI
+const char MT_FMSIOFF[] = "OFF";
+const char MT_FMSION[] = "ON";
+
+struct M_ITEM M_FMSI[] =
+    {
+        {MID_FMSIOFF, MT_FMSIOFF},
+        {MID_FMSION, MT_FMSION}};
 
 // Menu Option->DIRA
 const char MT_DIRAOFF[] = "OFF";
@@ -178,6 +189,7 @@ struct M_SUBMENU SM_List[] =
         {MID_LSIG, M_LSIG, sizeof(M_LSIG) / sizeof(struct M_ITEM)},                // Menu Option->LSIG
         {MID_FMCE, M_FMCE, sizeof(M_FMCE) / sizeof(struct M_ITEM)},                // Menu Option->FMCE
         {MID_FMMP, M_FMMP, sizeof(M_FMMP) / sizeof(struct M_ITEM)},                // Menu Option->FMMP
+        {MID_FMSI, M_FMSI, sizeof(M_FMSI) / sizeof(struct M_ITEM)},                // Menu Option->FMSI
         {MID_DIRA, M_DIRA, sizeof(M_DIRA) / sizeof(struct M_ITEM)},                // Menu Option->DIRA
         {MID_DEEM, M_Deem, sizeof(M_Deem) / sizeof(struct M_ITEM)},                // Menu Option->DEEM
         {MID_TUNE, M_Tune, sizeof(M_Tune) / sizeof(struct M_ITEM)},                // Menu Frequency->TUNE
@@ -254,6 +266,10 @@ void LCDOn(void) {
 }
 
 void LCDInit(void) {
+  LCDCmd(0x33);
+  HAL_Delay(5);
+  LCDCmd(0x32);
+  HAL_Delay(5);
   LCDCmd(0x28); // 4 bits interface
   HAL_Delay(5);
   LCDSetBackLight(255);
@@ -1136,7 +1152,9 @@ void Menu_Help(void) {
           ("LSIG:LOWER SIG- NAL QUALITY FOR SEEK/SCAN/ANY"),
           ("FMST:FM STEREO  0=FORCE MONO    5=DEFAULT       9=STRONGEST"),
           ("FMCE:FM CHANNEL EQUALIZER"),
-          ("FMMP:FM ENHANCEDMULTIPATH SUPP- RESSION"),
+          ("FMMP:FM ENHANCEDMULTIPATH SUPPRESSION"),
+          ("DIRA:DIGITAL RADIO"),
+          ("FMSI:FM STEREO IMPROVEMENT"),
           ("DEEM:FM DEEMPHA-SIS CONSTANT"),
           ("BKLT:ADJUST LCD BACKLIGHT"),
           ("KEEP:SECONDS OF LCD KEEP ON"),
@@ -1155,7 +1173,7 @@ void Menu_Help(void) {
           ("S&S:SCAN & SAVE STATIONS IN BAND"),
           ("FM-L:BAND BELOW FM BAND"),
           ("SLP:SLEEP MCU"),
-          ("YACRC6686 V2 Build 1 2023.1.9")};
+          ("WTCRC6686 V2 Build 1 2023.1.9")};
 
   nItems = sizeof(s) / sizeof(const char *);
   // 01234567890123450123456789012345
@@ -1250,6 +1268,10 @@ void ProcSubMenu(struct M_SUBMENU *pSubMenu) {
 
     case MID_FMMP:
       nHit = nFMEMS;
+      break;
+
+    case MID_FMSI:
+      nHit = nFMSI;
       break;
 
     case MID_DIRA:
@@ -1348,14 +1370,21 @@ void ProcMenuItem(uint8_t nMenuID) {
   if ((nMenuID >= MID_FMCEOFF) && (nMenuID <= MID_FMCEON)) {
     nFMCEQ = nMenuID - MID_FMCEOFF; // FM channel equalizer, 0=off, 1=on
     SetRFCtrlReg();
-    AddSyncBits(NEEDSYNC_MISC2);
+    AddSyncBits(NEEDSYNC_MISC1);
     return;
   }
 
   if ((nMenuID >= MID_FMMPOFF) && (nMenuID <= MID_FMMPON)) {
     nFMEMS = nMenuID - MID_FMMPOFF; // FM enhanced multipath suppression, 0=off, 1=on
     SetRFCtrlReg();
-    AddSyncBits(NEEDSYNC_MISC2);
+    AddSyncBits(NEEDSYNC_MISC1);
+    return;
+  }
+
+  if ((nMenuID >= MID_FMSIOFF) && (nMenuID <= MID_FMSION)) {
+    nFMSI = nMenuID - MID_FMSIOFF; // FM Stereo Improvement, 0=off, 1=on
+    SetFMSI();
+    AddSyncBits(NEEDSYNC_MISC1);
     return;
   }
 

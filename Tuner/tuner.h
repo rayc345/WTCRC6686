@@ -14,6 +14,7 @@ bool TuneFreq(int32_t);
 void AdjFreq(bool bCurrStep);
 void TuneFreqDisp(void);
 void SetDigiRadio(void);
+void SetFMSI(void);
 uint32_t ReadChFreq(void);
 void WriteChFreq(bool bAdd);
 void SeekCh(int8_t nDir);

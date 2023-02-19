@@ -9,7 +9,7 @@ const uint8_t NVM_INIT[] =
         0x80 + 10, 0xff,         // Band frequency
         7, 4, 10, 0, 0, 0, 0, 0, // Band, Vol, RFMode, TuneType, StepIdx, FMFilter, AMFilter
         6, 15, 30, 5, 3, 255, 0, // Squ1, Squ2, TScan, TAny, BkAdj, BkKeep,
-        5, 0x40, 160, 0, 0, 0,   // Misc1, Misc2, Misc3, Misc4, Misc5
+        5, 0x7D, 0, 0, 0, 0,     // Misc1, Misc2, Misc3, Misc4, Misc5
         0                        // End
 };
 
@@ -55,15 +55,15 @@ void NVMGetArgs(void) {
     nAMFilter = DEF_AM_FILTER;
 
   u8 = eeprom_read_byte(NVMADDR_MISC1);
-  nDeemphasis = u8 >> 6; // FM de-emphasis, 0=off, 1=50us, 2=75us
+  nLowerSig = (u8 >> 7) & 1; // Reduce signal quality for seek/scan/any, 0=normal, 1=lower
+  nFMCEQ = (u8 >> 6) & 1;    // FM channel equalizer, 0=off, 1=on
+  nFMEMS = (u8 >> 5) & 1;    // FM enhanced multipath suppression, 0=off, 1=on
+  nFMSI = (u8 >> 4) & 1;     // FM Stereo Improvement, 0=off, 1=on
+  nDIGRA = (u8 >> 3) & 1;    // FM/AM Digital radio, 0=off, 1=on
+  // nFMPD = (u8 >> 2) & 1;    // FM Phase diversity, 0=off, 1=on
+  nDeemphasis = (u8)&3; // FM de-emphasis, 0=off, 1=50us, 2=75us
   if (nDeemphasis > 2)
     nDeemphasis = DEEMPH50;
-  nDIGRA = (u8 >> 5) & 1;    // FM/AM Digital radio, 0=off, 1=on
-  nLowerSig = (u8 >> 4) & 1; // Reduce signal quality for seek/scan/any, 0=normal, 1=lower
-
-  u8 = eeprom_read_byte(NVMADDR_MISC2);
-  nFMEMS = u8 >> 7;       // FM enhanced multipath suppression, 0=off, 1=on
-  nFMCEQ = (u8 >> 5) & 1; // FM channel equalizer, 0=off, 1=on
 
   nSquelch[0] = constrain(eeprom_read_byte(NVMADDR_SQU1), -20, 99);
   nSquelch[1] = constrain(eeprom_read_byte(NVMADDR_SQU2), -20, 99);

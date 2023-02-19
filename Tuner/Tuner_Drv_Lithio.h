@@ -126,6 +126,7 @@ bool devTEF_FM_Set_Highcut_Max(uint16_t mode, uint16_t limit);
 bool devTEF_FM_Set_Stereo_Level(uint16_t mode, uint16_t start, uint16_t slope);
 bool devTEF_FM_Set_Stereo_Noise(uint16_t mode, uint16_t start, uint16_t slope);
 bool devTEF_FM_Set_Stereo_Mph(uint16_t mode, uint16_t start, uint16_t slope);
+bool devTEF_FM_Set_Stereo_Max(uint16_t mode);
 bool devTEF_FM_Set_Stereo_Min(uint16_t mode, uint16_t limit);
 bool devTEF_FM_Set_StHiBlend_Level(uint8_t mode, uint16_t start, uint16_t slope);
 bool devTEF_FM_Set_StHiBlend_Noise(uint8_t mode, uint16_t start, uint16_t slope);

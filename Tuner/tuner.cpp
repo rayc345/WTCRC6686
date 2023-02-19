@@ -169,6 +169,15 @@ void SetDigiRadio(void) {
   }
 }
 
+void SetFMSI(void) {
+  devTEF_FM_Set_StereoImprovement(nFMSI);
+  if (nFMSI) {
+    devTEF_FM_Set_Stereo_Max(0);
+  } else {
+    devTEF_FM_Set_Stereo_Max(1);
+  }
+}
+
 uint32_t ReadChFreq(void) {
   uint16_t nNVMData;
   int32_t nFreq;
@@ -555,10 +564,7 @@ void TunerLoop(void) {
           eeprom_write_byte(NVMADDR_AMFILTER, nAMFilter);
 
         if (nAutoSyncBits & NEEDSYNC_MISC1)
-          eeprom_write_byte(NVMADDR_MISC1, (nDeemphasis << 6) | (nDIGRA << 5) | (nLowerSig << 4));
-
-        if (nAutoSyncBits & NEEDSYNC_MISC2)
-          eeprom_write_byte(NVMADDR_MISC2, (nFMEMS << 7) | (nFMCEQ << 5));
+          eeprom_write_byte(NVMADDR_MISC1, (nLowerSig << 7) | (nFMCEQ << 6) | (nFMEMS << 5) | (nFMSI << 4) | (nDIGRA << 3) | nDeemphasis);
 
         nAutoSyncBits = 0;
       }

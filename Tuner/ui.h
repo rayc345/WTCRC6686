@@ -69,6 +69,7 @@ enum MIDS {
   MID_LSIG = 0x06,        // Normal/reduced signal quality for seek/scan/any
   MID_FMCE,               // FM channel equalizer
   MID_FMMP,               // FM improved multipath suppression
+  MID_FMSI,               // FM Stereo Improvement
   MID_DIRA,               // FM/AM Digital radio
   MID_DEEM,               // FM de-emphasis
   MID_TUNE,
@@ -83,6 +84,8 @@ enum MIDS {
   MID_FMCEON,
   MID_FMMPOFF,
   MID_FMMPON,
+  MID_FMSIOFF,
+  MID_FMSION,
   MID_DIRAOFF,
   MID_DIRAON,
   MID_DEEM0,
